@@ -34,3 +34,17 @@ module.exports.deleteToDo = async (req,res) => {
     .catch((err) => console.log(err))
 
 }
+
+module.exports.searchToDo = async (req, res) => {
+  const { keyword } = req.query;
+
+  try {
+    const toDo = await ToDoModel.find({
+      text: { $regex: keyword, $options: "i" }, // Case-insensitive search
+    });
+    res.send(toDo);
+  } catch (error) {
+    console.error("Error searching to-do items:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
